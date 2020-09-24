@@ -146,6 +146,10 @@ class MiniCssExtractPlugin {
           (result, { chunk }) => {
             const { chunkGraph } = compilation;
 
+            // We don't need hot update chunks for css
+            // We will use the real asset instead to update
+            if (chunk instanceof webpack.HotUpdateChunk) return;
+
             const renderedModules = Array.from(
               this.getChunkModules(chunk, chunkGraph)
             ).filter((module) => module.type === MODULE_TYPE);
@@ -398,7 +402,8 @@ class MiniCssExtractPlugin {
                   referencedChunk.canBeInitial()
                     ? ({ chunk: chunkData }) =>
                         this.options.moduleFilename(chunkData)
-                    : this.options.chunkFilename
+                    : this.options.chunkFilename,
+                true
               )
             );
             compilation.addRuntimeModule(
