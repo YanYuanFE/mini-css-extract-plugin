@@ -150,12 +150,9 @@ class MiniCssExtractPlugin {
               this.getChunkModules(chunk, chunkGraph)
             ).filter((module) => module.type === MODULE_TYPE);
 
-            const filenameTemplate =
-              chunk.filenameTemplate ||
-              (chunk.hasRuntime() || chunk.canBeInitial()
-                ? ({ chunk: chunkData }) =>
-                    this.options.moduleFilename(chunkData)
-                : this.options.chunkFilename);
+            const filenameTemplate = chunk.canBeInitial()
+              ? ({ chunk: chunkData }) => this.options.moduleFilename(chunkData)
+              : this.options.chunkFilename;
 
             if (renderedModules.length > 0) {
               result.push({
