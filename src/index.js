@@ -59,6 +59,7 @@ class MiniCssExtractPlugin {
     }
   }
 
+  /** @param {import("webpack").Compiler} compiler */
   apply(compiler) {
     compiler.hooks.thisCompilation.tap(pluginName, (compilation) => {
       compilation.dependencyFactories.set(
@@ -151,11 +152,10 @@ class MiniCssExtractPlugin {
 
             const filenameTemplate =
               chunk.filenameTemplate ||
-              chunk.hasRuntime() ||
-              chunk.isOnlyInitial()
+              (chunk.hasRuntime() || chunk.canBeInitial()
                 ? ({ chunk: chunkData }) =>
                     this.options.moduleFilename(chunkData)
-                : this.options.chunkFilename;
+                : this.options.chunkFilename);
 
             if (renderedModules.length > 0) {
               result.push({
